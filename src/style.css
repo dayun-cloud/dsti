@@ -1,0 +1,561 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'Outfit', 'PingFang SC', 'HarmonyOS Sans SC', 'Source Han Sans SC', 'Microsoft YaHei',
+    system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, 'Courier New', monospace;
+
+  --color-abyss-950: #02070d;
+  --color-abyss-900: #04101c;
+  --color-abyss-850: #06182a;
+  --color-abyss-800: #082238;
+  --color-abyss-700: #0b3050;
+
+  --color-aqua-200: #c3f6ff;
+  --color-aqua-300: #8ceaff;
+  --color-aqua-400: #5ddcff;
+  --color-aqua-500: #2ec9f2;
+
+  --color-gold-300: #ffe6a6;
+  --color-gold-400: #ffd166;
+  --color-gold-500: #f7b731;
+
+  --color-rose-300: #ffc0dc;
+  --color-rose-400: #ff9ec7;
+
+  --shadow-glow: 0 0 60px -12px rgba(93, 220, 255, 0.45);
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('./assets/fonts/outfit-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: dark;
+  --page-max: 1360px;
+  --text: #e9f6ff;
+  --muted: #9fc0d8;
+  --line: rgba(154, 214, 255, 0.13);
+  --aqua: #5ddcff;
+  --gold: #ffd166;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #02070d;
+  color: var(--text);
+  /* 再声明一次：部分内核对 :root 上的 color-scheme 视而不见，但认 body 这一层的 */
+  color-scheme: dark;
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(93, 220, 255, 0.32);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+main {
+  overflow-x: clip;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #04101c;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 220, 255, 0.24);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 220, 255, 0.4);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Layout                                                             */
+/* ------------------------------------------------------------------ */
+
+.shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@media (max-width: 640px) {
+  .shell {
+    padding-inline: 18px;
+  }
+}
+
+.section {
+  padding-block: clamp(64px, 9vw, 112px);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--aqua);
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.section-lead {
+  margin-top: 14px;
+  max-width: 640px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.85;
+}
+
+.text-gradient {
+  /* color 是兜底：支持 -webkit-text-fill-color 的内核吃渐变，不支持的至少还是亮字，
+     不会因为背景没被裁到文字上而变成透明/发黑 */
+  color: #cfefff;
+  background: linear-gradient(100deg, #b6f3ff 0%, #6fe3ff 42%, #b6c9ff 70%, #ffb3d4 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-pan 8s linear infinite alternate;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Surfaces                                                           */
+/* ------------------------------------------------------------------ */
+
+.glass {
+  position: relative;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.018)),
+    rgba(4, 16, 28, 0.42);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  box-shadow:
+    0 30px 60px -34px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.075);
+}
+
+.card {
+  border-radius: 26px;
+  padding: 26px;
+}
+
+.card-hover {
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    box-shadow 0.4s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  border-color: rgba(140, 230, 255, 0.4);
+  box-shadow:
+    0 40px 80px -36px rgba(0, 0, 0, 0.95),
+    0 0 50px -18px rgba(93, 220, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(150, 220, 255, 0.28),
+    rgba(150, 220, 255, 0.05)
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Buttons                                                            */
+/* ------------------------------------------------------------------ */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  height: 50px;
+  padding-inline: 26px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* 亮色渐变底 + 深墨色字。
+   唯一要防的是 WebView 的「自动暗色」：它会把亮面当背景压暗，又把上面的深色文字调亮，
+   结果变成灰白字压在亮底上（QQ 内置浏览器就是这个症状）。
+   给元素自己声明 color-scheme: dark，内核就认定「这个元素已经是深色主题」，跳过自动暗色 ——
+   实测在强制暗色下，渐变和文字都保持原样。 */
+.btn-primary {
+  color-scheme: dark;
+  color: #03222f;
+  background: linear-gradient(118deg, #a9f1ff 0%, #6fe3ff 44%, #b6c9ff 72%, #ffb3d4 100%);
+  box-shadow:
+    0 12px 34px -12px rgba(93, 220, 255, 0.55),
+    0 8px 26px -14px rgba(255, 158, 199, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.65) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 44px -12px rgba(93, 220, 255, 0.7),
+    0 12px 32px -16px rgba(255, 158, 199, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-primary:hover::after {
+  transform: translateX(120%);
+}
+
+.btn-ghost {
+  color: #dff4ff;
+  border: 1px solid rgba(160, 220, 255, 0.24);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.btn-ghost:hover {
+  border-color: rgba(140, 230, 255, 0.6);
+  background: rgba(93, 220, 255, 0.1);
+  color: #fff;
+}
+
+.btn-sm {
+  height: 40px;
+  padding-inline: 18px;
+  font-size: 13.5px;
+}
+
+.btn-lg {
+  height: 56px;
+  padding-inline: 34px;
+  font-size: 16.5px;
+}
+
+.btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Chips & badges                                                     */
+/* ------------------------------------------------------------------ */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding-inline: 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(160, 220, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: #c7e6f8;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    color 0.2s,
+    transform 0.2s;
+}
+
+.chip:hover {
+  border-color: rgba(140, 230, 255, 0.45);
+  color: #fff;
+}
+
+.chip.is-active {
+  border-color: transparent;
+  color: #04212e;
+  background: linear-gradient(115deg, #a9f1ff, #5ddcff);
+  font-weight: 700;
+  box-shadow: 0 6px 18px -8px rgba(93, 220, 255, 0.8);
+}
+
+.chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Animations                                                         */
+/* ------------------------------------------------------------------ */
+
+@keyframes gradient-pan {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 100% center;
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes float-y-sm {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -6%, 0) scale(1.08);
+  }
+  66% {
+    transform: translate3d(-3%, 4%, 0) scale(0.96);
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-letter {
+  0% {
+    opacity: 0;
+    transform: scale(0.35) rotate(-14deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.1) rotate(3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes rise-bubble {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.7);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--bubble-opacity, 0.5);
+  }
+  90% {
+    opacity: var(--bubble-opacity, 0.5);
+  }
+  100% {
+    transform: translate3d(var(--bubble-drift, 4vw), -110vh, 0) scale(1.15);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float-y 7s ease-in-out infinite;
+}
+.animate-float-sm {
+  animation: float-y-sm 5s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 28s linear infinite;
+}
+.animate-fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Scroll reveal (v-reveal) */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Utilities                                                          */
+/* ------------------------------------------------------------------ */
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.mask-fade-b {
+  mask-image: linear-gradient(to bottom, #000 70%, transparent);
+}
+
+.prose-fish {
+  color: #d6ebfa;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

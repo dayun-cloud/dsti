@@ -1,0 +1,8 @@
+node_modules/
+dist/
+deploy/
+*.tsbuildinfo
+*.local
+.DS_Store
+.vite/
+temp/
